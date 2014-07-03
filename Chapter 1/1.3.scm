@@ -1,0 +1,37 @@
+(define (square x)
+ 	 (* x x)
+)
+
+(define (sumSquares x y)
+	(+ (square x) (square y))
+)
+
+(define (max x y)
+	(if (> x  y)
+	    (x)
+	    (y)
+	)
+)
+
+(define (twoLargerNums x y z)
+		(if (> x y)
+			(if (> z y)
+				(list x z)
+				(list x y)
+			)
+			(if (> z x)
+				(list y z)
+				(list y x)
+			)
+		)
+)
+
+(define (sumTwoLargestNum x y z)
+	(define twoLargestNum (twoLargerNums x y z))
+	(sumSquares
+		(list-ref twoLargestNum 0)
+		(list-ref twoLargestNum 1)
+	)
+)
+
+(sumTwoLargestNum 1 2 3)
