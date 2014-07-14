@@ -22,8 +22,20 @@
 ;; For extremely small or large numbers; a close non-accurate guess will pass this test
 ;; even though it is not the accurate value.
 ;; Also this is the reason why (sqrt 9) is not an absolute 3.0 value.
+;;
+;; NEW implementation
+(define (sqrt-iter guess x)
+  (if (good-enough? guess (improve guess x))
+      guess
+      (sqrt-iter (improve guess x) x)))
 
+(define (good-enough? prevGuess nextGuess)
+  (< 	(/ (abs (- prevGuess nextGuess))
+	   prevGuess	  	   
+  	)
+	1.0e-20	
+  )
+)
 
-
-
+(sqrt 9) ; absolute 3 value
 
