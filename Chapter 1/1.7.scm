@@ -30,12 +30,8 @@
       (sqrt-iter (improve guess x) x)))
 
 (define (good-enough? prevGuess nextGuess)
-  (< 	(/ (abs (- prevGuess nextGuess))
-	   prevGuess	  	   
-  	)
-	1.0e-20	
-  )
-)
+  (<  (/ (abs (- prevGuess nextGuess)) prevGuess)
+      1.0e-20))
 
 (sqrt 9) ; absolute 3 value
 
