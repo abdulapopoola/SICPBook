@@ -34,8 +34,9 @@
 ;; (sumMethod2 0 9)
 ;; 9
 
-;; Note that each integer value 5 would be expanded recursively in terms of itself until it gets to 0, same for 6, 7, 8 until the result 9 is achieved.
-;; (inc (+ (dec 4) 5))
+;; Note that each integer value 5 would be expanded recursively in terms of itself until it gets to 0,
+;; same for 6, 7, 8 until the result 9 is achieved.
+;; (inc (+ (dec 4) 5)
 ;; (inc (+ 3 5))
 ;; (+ (+ 3 5) 1)
 ;; ;; (+ (inc (+ (dec 3) 5)) 1)
