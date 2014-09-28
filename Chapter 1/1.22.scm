@@ -1,5 +1,3 @@
-#lang planet neil/sicp
-
 (define (timed-prime-test n)
   (newline)
   (display n)
@@ -29,10 +27,10 @@
 
 (define (prime? n) (= (smallest-divisor n) n))
 
-(define (search-for-primes start end)
-  (#t))
-;;start number
-;;how many needed
-;;check if even, if even, +1 with same function
-;;else, call timed-prime-test with start number
-;;; continue calling with odd+2 until found gets to zero
+(define (search-for-primes startNum primesCount)
+  (cond ((= primesCount 0) (void))
+        ((even? startNum) (search-for-primes (+ startNum 1) primesCount))
+        ((prime? startNum) ((timed-prime-test startNum) (search-for-primes (+ startNum 2) (- primesCount 1))))
+        ((search-for-primes (+ startNum 2) primesCount))))
+
+(search-for-primes 1000 3)
