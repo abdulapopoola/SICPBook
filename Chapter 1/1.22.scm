@@ -1,3 +1,5 @@
+#lang planet neil/sicp
+
 (define (timed-prime-test n)
   (newline)
   (display n)
@@ -5,8 +7,8 @@
 
 (define (start-prime-test n start-time)
   (if (prime? n)
-      (report-prime (- (runtime) 
-                       start-time))))
+      (report-prime (- (runtime) start-time))
+      (#f)))
 
 (define (report-prime elapsed-time)
   (display " *** ")
@@ -28,9 +30,10 @@
 (define (prime? n) (= (smallest-divisor n) n))
 
 (define (search-for-primes startNum primesCount)
-  (cond ((= primesCount 0) (void))
+  (cond ((= primesCount 0))
         ((even? startNum) (search-for-primes (+ startNum 1) primesCount))
-        ((prime? startNum) ((timed-prime-test startNum) (search-for-primes (+ startNum 2) (- primesCount 1))))
-        ((search-for-primes (+ startNum 2) primesCount))))
+        (if (timed-prime-test startNum) 
+            (search-for-primes (+ startNum 2) (- primesCount 1))
+            (search-for-primes (+ startNum 2) primesCount))))
 
 (search-for-primes 1000 3)
