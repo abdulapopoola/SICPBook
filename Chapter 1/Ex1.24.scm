@@ -1,5 +1,7 @@
 #lang planet neil/sicp
 
+(define attempts 50000)
+
 (define (fast-prime? n times)
   (cond ((= times 0) true)
         ((fermat-test n) 
@@ -26,7 +28,7 @@
   (start-prime-test n (runtime)))
 
 (define (start-prime-test n start-time)
-  (if (fast-prime? n 5)
+  (if (fast-prime? n attempts)
       (report-prime n (- (runtime) start-time))
       false))
 
@@ -46,20 +48,14 @@
                   (search-for-primes (+ startNum 2) primesCount)))))
 
 (search-for-primes 1000 3) ;;1009, 1013, 1019
-(newline)
-(search-for-primes 10000 3) ;;10007, 10009, 10037
-(newline)
-(search-for-primes 100000 3) ;; 100003, 100019, 100043
+;; avg runtime ~ 108000
 (newline)
 (search-for-primes 1000000 3) ;; 1000003, 1000033, 1000037
+;; avg runtime ~ 197000
 (newline)
-(search-for-primes 10000000 3) ;; 1000003, 1000033, 1000037
-(newline)
-(search-for-primes 100000000 3) ;; 1000003, 1000033, 1000037
-(newline)
-(search-for-primes 1000000000 3) ;; 1000003, 1000033, 1000037
-(newline)
-(search-for-primes 10000000000 3) ;; 1000003, 1000033, 1000037
-(newline)
-(search-for-primes 10000000000 3) ;; 1000003, 1000033, 1000037
-(newline)
+
+(/ 197 108)
+;; approximately 2 which is close to 
+
+(/ (log 1000000) (log 1000))
+;; 2.0
