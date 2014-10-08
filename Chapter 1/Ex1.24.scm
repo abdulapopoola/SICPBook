@@ -9,7 +9,7 @@
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
-  (try-it (+ 1 (random (- n 1)))))
+  (try-it (+ 1 (random (ceiling (/ n 100))))))
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
@@ -26,7 +26,7 @@
   (start-prime-test n (runtime)))
 
 (define (start-prime-test n start-time)
-  (if (fast-prime? n)
+  (if (fast-prime? n 5)
       (report-prime n (- (runtime) start-time))
       false))
 
@@ -53,17 +53,13 @@
 (newline)
 (search-for-primes 1000000 3) ;; 1000003, 1000033, 1000037
 (newline)
-
-;;These are still too fast so using larger numbers
-(search-for-primes 100000000 2); approximately 1000
+(search-for-primes 10000000 3) ;; 1000003, 1000033, 1000037
 (newline)
-(search-for-primes 1000000000 2); approximately 2000
+(search-for-primes 100000000 3) ;; 1000003, 1000033, 1000037
 (newline)
-(search-for-primes 10000000000 2); approximately 6000
-
-;;For a factor of 10 increase, runtime increases by approx (sqrt 10) ~ 3.16...
-
-;; Algorithm speeds up however the order of growth is same. The core algorithm 
-;; works by comparing (sqrt n) numbers; using only odd numbers halves this
-;; comparision but does not change the algorithm's scale of growth. However the runtime is improved
-;; 
+(search-for-primes 1000000000 3) ;; 1000003, 1000033, 1000037
+(newline)
+(search-for-primes 10000000000 3) ;; 1000003, 1000033, 1000037
+(newline)
+(search-for-primes 10000000000 3) ;; 1000003, 1000033, 1000037
+(newline)
