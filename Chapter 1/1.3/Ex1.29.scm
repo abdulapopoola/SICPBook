@@ -2,7 +2,6 @@
 ;; Simpson's rule
 ;; h = (b - a) /n
 ;; y(k) = f(a + kh)
-;; NEED TO UNDERSTAND, still abstruse
 
 (define (sum term a next b)
   (if (> a b)
