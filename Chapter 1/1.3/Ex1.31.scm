@@ -26,3 +26,16 @@
   (iter a 1))
 
 (factorial-iter 5)
+
+;; WALLIS PRODUCT
+;; Formula for pi / 2 using wallis product is 4n^2 / 4n^2 - 1
+;; http://en.wikipedia.org/wiki/Wallis_product
+
+(define (square n) (* n n))
+
+(define (wallis-pi n)
+  (define (term n)
+    (/ (* 4 (square n)) (- (* 4 (square n)) 1)))
+  (* 2 (product term 1 inc n)))
+
+(wallis-pi 10)
