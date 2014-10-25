@@ -36,6 +36,18 @@
 (define (wallis-pi n)
   (define (term n)
     (/ (* 4 (square n)) (- (* 4 (square n)) 1)))
-  (* 2 (product term 1 inc n)))
+  (* 2 (product-iter term 1 inc n)))
 
 (wallis-pi 10)
+
+;; Formula for nth term in book
+(define (wallis-pi2 n)
+  (define (term n)
+    (if (even? n)
+        (/ (+ 2 n) (+ 1 n))
+        (/ (+ 1 n) (+ 2 n))))
+  (* 4 (product-iter term 1 inc n)))
+
+(wallis-pi2 10)
+
+(= (wallis-pi 100000) (wallis-pi2 100000))
