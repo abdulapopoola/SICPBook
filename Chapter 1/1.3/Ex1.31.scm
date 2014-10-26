@@ -1,4 +1,5 @@
-#lang racket
+#lang planet neil/sicp
+
 (define (inc n) (+ n 1))
 (define (identity x) x)
 
