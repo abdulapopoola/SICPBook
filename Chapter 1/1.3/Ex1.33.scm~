@@ -1,11 +1,11 @@
 #lang planet neil/sicp
 
 (define (filtered-accumulate combiner null-value term a next b filter)
-  (define (iter a result)
-    (cond ((> a b) result)
-          ((filter (term a)) (iter (next a) (combiner (term a) result)))
-          (else (iter (next a) result))))
-  (iter a null-value))
+  (cond ((> a b) null-value)
+        ((filter (term a))
+                (filtered-accumulate combiner (combiner (term a) null-value) 
+                  term (next a) next b filter))
+        (else (filtered-accumulate combiner null-value term (next a) next b filter))))
 
 ;;HELPERS
 (define (inc x) (+ x 1))
