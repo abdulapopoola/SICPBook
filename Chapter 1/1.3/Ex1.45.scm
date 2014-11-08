@@ -28,6 +28,7 @@
   (try first-guess))
    
 ;;function calling functions be here; looks simple but deep
+;;repeated returns a function that accepts a function as input (average-damp) and returns a new function
 (define (nth-root x root)
   (fixed-point 
    ((repeated average-damp (- root 1))
