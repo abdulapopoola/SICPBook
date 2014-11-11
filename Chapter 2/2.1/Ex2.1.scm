@@ -4,13 +4,19 @@
 
 (define (denom x) (cdr x))
 
+;; XNOR is true when x and y have the same sign
+(define (xnor x y) 
+  (or (and x y)
+      (and (not x) (not y))))
+
 (define (make-rat n d) 
   (let ((abs-n (abs n))
         (abs-d (abs d)))
-    (if (or (and (> n 0) (> d 0))
-            (and (< n 0) (< d 0)))
-        (cons abs-n abs-d)
-        (cons (- abs-n) abs-d))))
+    (if (xnor 
+       (positive? n)
+       (positive? d))
+      (cons abs-n abs-d)
+      (cons (- abs-n) abs-d))))
 
 (make-rat 2 3)
 (make-rat 2 -3)
