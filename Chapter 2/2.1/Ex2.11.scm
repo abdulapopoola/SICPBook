@@ -12,7 +12,7 @@
          (y2 (upper-bound y)))
     (cond ((and (positive? x1) (positive? x2)
                 (positive? y1) (positive? y2))
-           ;{+ +] * [+ +]
+           ;[+ +] * [+ +]
            (make-interval (* x1 y1) (* x2 y2)))
           ((and (positive? x1) (positive? x2)
                 (negative? y1) (positive? y2))
