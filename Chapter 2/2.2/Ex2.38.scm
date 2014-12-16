@@ -14,13 +14,6 @@
       (op (car sequence)
           (fold-right op initial (cdr sequence)))))
 
-;;Recursive fold-left
-(define (fold-left-rec op initial sequence)
-  (if (null? sequence)
-      initial
-      (op (fold-left-rec op initial (cdr sequence))
-          (car sequence))))
-
 (fold-right / 1 (list 1 2 3)); 3/2
 (fold-left  / 1 (list 1 2 3)); 1/6
 (fold-right list nil (list 1 2 3)); '(1 '(2 '(3 '())))
