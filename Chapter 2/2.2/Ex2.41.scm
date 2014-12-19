@@ -10,6 +10,9 @@
 (define (flatmap proc seq)
   (accumulate append nil (map proc seq)))
 
+(define (sum-seq seq)
+  (accumulate + 0 seq))
+
 (define (filter predicate sequence)
   (cond ((null? sequence) nil)
         ((predicate (car sequence))
@@ -27,22 +30,22 @@
              (+ low 1) 
              high))))
 
-(define (unique-pairs n)
-   (flatmap (lambda (x)
-          (map (lambda (y)
-                  (list x y))
-                (enumerate-interval 1 (- x 1))))
-          (enumerate-interval 1 n)))
+(define (triples n)
+  (flatmap (lambda (x)
+     (flatmap (lambda (y)
+                (map (lambda (z)
+                       (list x y z))
+                     (enumerate-interval 1 (- y 1))))                  
+              (enumerate-interval 1 (- x 1))))
+           (enumerate-interval 1 n)))
 
-(unique-pairs 3)
+(define (make-triple triple)
+  (list (car triple) (cadr triple) (caddr triple) (sum-seq triple)))
 
-(define (prime-sum-pairs n)
-   (map make-pair-sum
-        (filter prime-sum?
-                (unique-pairs n))))
+(define (ordered-triples n s)
+   (map make-triple
+        (filter (lambda (triple)
+                  (= (sum-seq triple) s))
+                (triples n))))
 
-(define (prime-sum? pair)
-   (prime? (+ (car pair) (cadr pair))))
-
-(define (make-pair-sum pair)
-   (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+(ordered-triples 5 10)
