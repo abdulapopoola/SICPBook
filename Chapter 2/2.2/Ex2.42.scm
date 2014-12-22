@@ -1,13 +1,8 @@
 #lang planet neil/sicp
 
-;;Origin of solution: http://www.billthelizard.com/2011/06/sicp-242-243-n-queens-problem.html
+;;Solution heavily influenced by Bill the Lizard's work here: http://www.billthelizard.com/2011/06/sicp-242-243-n-queens-problem.html
 
 ;;helpers
-(define (list-ref items n)
-  (if (= n 0)
-      (car items)
-      (list-ref (cdr items) (- n 1))))
-
 (define (enumerate-interval low high)
   (if (> low high)
       nil
@@ -37,7 +32,7 @@
 (define empty-board nil)
 
 (define (adjoin-position row col positions)
-   (append positions (list (make-position row col))))
+   (append (list (make-position row col)) positions))
 
 (define (make-position row col)
    (cons row col))
@@ -54,11 +49,9 @@
          (abs (- (get-column q1) (get-column q2))))))
 
 (define (safe? col positions)
-   (let ((kth-queen (list-ref positions (- col 1)))
-         (other-queens (filter (lambda (q)
-                                 (not (= col (get-column q))))
-                               positions)))
-
+   (let ((kth-queen (car positions))
+         (other-queens (cdr positions)))
+     
    (define (iter q board)
      (or (null? board)
          (and (not (attacks? q (car board)))
@@ -71,8 +64,6 @@
         (list empty-board)
         (filter
          (lambda (positions) 
-           (display positions)
-           (newline)
            (safe? k positions))
          (flatmap
           (lambda (rest-of-queens)
@@ -83,4 +74,4 @@
           (queen-cols (- k 1))))))
   (queen-cols board-size))
 
-(queens 3)
+(queens 1)
