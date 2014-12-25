@@ -1,3 +1,3 @@
 #lang planet neil/sicp
 
-;;Skipping Ex2.50.scm
+;;Skipping Ex2.52.scm
