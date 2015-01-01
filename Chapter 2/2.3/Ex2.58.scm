@@ -31,7 +31,7 @@
 (define (sum? x)
   (and (pair? x) (eq? (cadr x) '+)))
 (define (addend s) (car s))
-(define (augend s) (caddr s))
+(define (augend s) (cddr s))
 (define (product? x)
   (and (pair? x) (eq? (cadr x) '*)))
 (define (multiplier p) (car p))
@@ -52,6 +52,8 @@
         ((variable? exp)
          (if (same-variable? exp var) 1 0))
         ((sum? exp)
+         (display (augend exp))
+         (newline)
          (make-sum (deriv (addend exp) var)
                    (deriv (augend exp) var)))
         ((product? exp)
@@ -70,4 +72,4 @@
         (else (error "unknown expression 
                       type: DERIV" exp))))
 
-(deriv '(x + (3 * (x + (y + 2)))) 'x)
+(deriv '(x + 3 * (x + y + 2)) 'x)
