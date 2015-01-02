@@ -1,5 +1,8 @@
 #lang planet neil/sicp
 
+;; Solution originally from Alexey Grigorev's comment on 
+;; http://www.billthelizard.com/2012/04/sicp-256-258-symbolic-differentiation.html
+
 ;; helpers
 (define (variable? x) (symbol? x))
 
@@ -28,24 +31,66 @@
          (* m1 m2))
         (else (list m1 '* m2))))
 
-(define (sum? x)
-  (and (pair? x) (eq? (cadr x) '+)))
-(define (addend s) (car s))
-(define (augend s) (caddr s))
-(define (product? x)
-  (and (pair? x) (eq? (cadr x) '*)))
-(define (multiplier p) (car p))
-(define (multiplicand p) (caddr p))
-
-(define (exponentiation? x)
-  (and (pair? x) (eq? (car x) '**)))
-(define (base p) (cadr p))
-(define (exponent p) (caddr p))
 (define (make-exponentiation base exp)
   (cond ((=number? exp 0) 1)
         ((=number? exp 1) base)
         ((and (number? base) (number? exp)) (expt base exp))
         (else (list '**  base exp))))
+
+(define (operation expr)
+  (cond ((memq '+ expr) '+)
+        ((memq '* expr) '*)
+        ((memq '** expr) '**)))
+
+(define (prefix item x)
+  (define (iter x result)
+    (if (eq? (car x) item)
+        (reverse result)
+        (iter (cdr x) (cons (car x) result))))
+  (iter x '()))
+
+(define (sum? x)
+  (eq? '+ (operation x)))
+
+(define (addend s)
+  (let ((a (prefix '+ s)))
+    (if (= (length a) 1)
+        (car a)
+        a)))
+
+(define (augend s)
+  (let ((a (cdr (memq '+ s))))
+    (if (= (length a) 1) (car a) a)))
+
+(define (product? x) 
+  (eq? '* (operation x)))
+
+(define (multiplier p)
+  (let ((m (prefix '* p)))
+    (if (= (length m) 1)
+        (car m)
+        m)))
+
+(define (multiplicand p)
+  (let ((m (cdr (memq '* p))))
+    (if (= (length m) 1)
+        (car m)
+        m)))
+
+(define (exponentiation? x)
+  (eq? '** (operation x)))
+
+(define (base e)
+  (let ((p (prefix '** e)))
+    (if (= (length p) 1)
+        (car p)
+        p)))
+
+(define (exponent e)
+  (let ((p (cdr (memq '** e))))
+    (if (= (length p) 1)
+        (car p)
+        p)))
 
 (define (deriv exp var)
   (cond ((number? exp) 0)
@@ -70,4 +115,5 @@
         (else (error "unknown expression 
                       type: DERIV" exp))))
 
+(deriv ' (x * 3 + 5 * (x + y + 2)) 'x)
 (deriv '(x + (3 * (x + (y + 2)))) 'x)
