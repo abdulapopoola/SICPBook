@@ -20,3 +20,5 @@
   (iter set1 set2))
 
 (union-set '(1 2 3) '(4 5 6))
+(union-set '() '(4 5 6))
+(union-set '(1 2 3) '())
