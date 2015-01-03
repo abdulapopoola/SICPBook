@@ -29,7 +29,7 @@
                                  set2)))
         (else (intersection-set (cdr set1) 
                                 set2))))
-;;O(N) different version in 2.59 which is O(N**2)
+;;O(N**2) not different from version in 2.59
 
 ;;This version might be preferred for operations on large datasets
 ;; which require speed. The flipside is that lookups might take more
