@@ -13,13 +13,12 @@
        (encode (cdr message) tree))))
 
 (define (encode-symbol symbol tree)
-  (cond ((not (member symbol (symbols tree)))
-         (error "Symbol not found in tree" symbol))
-        ((leaf? tree) '())
+  (cond ((leaf? tree) '())
         ((member symbol (symbols (left-branch tree)))
          (cons 0 (encode-symbol symbol (left-branch tree))))
         ((member symbol (symbols (right-branch tree)))
-         (cons 1 (encode-symbol symbol (right-branch tree))))))
+         (cons 1 (encode-symbol symbol (right-branch tree))))
+        (else (error "Symbol not found in tree" symbol))))
 
 (equal? (encode (decode sample-message sample-tree) sample-tree) sample-message)
 
