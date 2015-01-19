@@ -60,7 +60,7 @@
                              records)))
          (if (empty? result)
              false
-             (cadr result)))))            
+             (cadar result)))))            
 
 ;; 2
 (define (get-salary name file)
@@ -82,11 +82,12 @@
                              file)))
          (if (empty? result)
              false
-             (cadddr result)))))
+             (cadddr (car result))))))
 
 (get-record "John Doe" div1)
 (get-salary "John Doe" div1)
-
+(get-record "Fulan He" div2)
+(get-salary "Fulan He" div2)
 ;; 3
 (define (true? x) (not (false? x)))
 
