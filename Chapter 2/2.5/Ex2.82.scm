@@ -25,3 +25,5 @@
             (coerced-list (apply-generic op coerced-list))
             (else (error "No method for these types"
                          (list op type-tags)))))))
+
+;;NOT TESTED!!!
