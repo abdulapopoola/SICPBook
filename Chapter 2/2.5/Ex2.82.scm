@@ -1,6 +1,5 @@
 #lang planet neil/sicp
 
-
 (define (coerce-to-type type full-list)
   (map (lambda (t) 
          (let ((coerce-op (get-coercion type t)))
