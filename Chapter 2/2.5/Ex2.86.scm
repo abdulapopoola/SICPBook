@@ -25,7 +25,7 @@
      (lambda (x) (make-real (cos (/ (numer x) (denom x))))))
 
 ;; Real number package
-;; External interface for Complex package
+;; External interface for Real package
 (put 'square 'complex
      (lambda (x) (tag (* x x))))
 (put 'arctan '(real real)
