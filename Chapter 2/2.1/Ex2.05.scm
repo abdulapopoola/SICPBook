@@ -17,5 +17,5 @@
 (define (cdr x)
   (divide-by-n x 3))
 
-(car (cons 1 17))
-(cdr (cons 1 1))
+(car (cons 3 17))
+(cdr (cons 9 9))
