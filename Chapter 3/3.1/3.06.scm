@@ -1,9 +1,5 @@
 #lang planet neil/sicp
 
-(define rand
-  (let ((x random-init))
-    (lambda () (set! x (rand-update x)) x)))
-
 (define (rand)
   (let ((x random-init))
     (define (generate) 
