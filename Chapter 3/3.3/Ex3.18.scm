@@ -40,4 +40,4 @@
 (define z (make-cycle (list 'a 'b 'c 'd)))
 (define w (append '(g h j) z))
 
-(count-pairs z)
+;(count-pairs z)
