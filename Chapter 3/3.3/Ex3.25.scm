@@ -3,23 +3,27 @@
 ;; Need to change to pass in table in search to lookup/insert procedures
 
 (define (make-table same-key?)
+  (define (lookup-table table key)
+    (assoc key (cdr table)))
+  (define (walk-down-tables table lst)
+    (cond ((not table) false)
+          ((= (length lst) 1)
+           (lookup-table table (car lst)))
+          (else (walk-down-tables 
+                 (lookup-table table (car lst))
+                 (cdr lst)))))
   (define (assoc key lst proc)
     (cond ((null? lst) false)
           ((same-key? (caar lst) key) (car lst))
           (else 
            (assoc key (cdr lst) proc))))
   (let ((local-table (list '*table*)))
-    (define (lookup key-list)
-               
-      (let ((subtable 
-             (assoc (car key-list) (cdr local-table) same-key?)))
-        
-        (if subtable
-            (let ((record 
-                   (assoc key-2 (cdr subtable) same-key?)))
-              (if record (cdr record) false))
+    (define (lookup key-list) 
+      (let ((record (walk-down-tables local-table key-list)))
+        (if record
+            (cdr record)
             false)))
-    (define (insert! key-1 key-2 value)
+    (define (insert! key-list value)
       (let ((subtable 
              (assoc key-1 (cdr local-table) same-key?)))
         (if subtable
