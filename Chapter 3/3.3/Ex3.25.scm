@@ -6,7 +6,8 @@
   (define (lookup-table table key)
     (assoc key (cdr table)))
   (define (walk-down-tables table lst)
-    (cond ((= (length lst) 1)
+    (cond ((not table) false)
+          ((= (length lst) 1)
            (lookup-table table (car lst)))
           (else (walk-down-tables 
                  (lookup-table table (car lst))
@@ -49,3 +50,5 @@
 ((tbl1 'lookup-proc) (list 'planet 1)) ;Mercury
 ((tbl1 'lookup-proc) (list 'planet 2)) ;Venus
 ((tbl1 'lookup-proc) (list 'planet 3)) ;Earth
+
+
