@@ -2,21 +2,27 @@
 
 ;; Need to change to pass in table in search to lookup/insert procedures
 
-(define (make-table same-key?)
+(define (make-table)
   (define (lookup-table table key)
     (assoc key (cdr table)))
   (define (walk-down-tables table lst)
-    (cond ((not table) false)
-          ((= (length lst) 1)
+    (cond ((= (length lst) 1)
            (lookup-table table (car lst)))
           (else (walk-down-tables 
                  (lookup-table table (car lst))
                  (cdr lst)))))
-  (define (assoc key lst proc)
-    (cond ((null? lst) false)
-          ((same-key? (caar lst) key) (car lst))
-          (else 
-           (assoc key (cdr lst) proc))))
+  (define (create-linear-chain lst val)
+    (if (null? lst)
+        val
+        (cons (car lst)
+              (list (create-linear-chain (cdr lst) val)))))
+  (define (insert-into-tables table lst val)
+    (let ((record (lookup-table table (car lst))))
+      (if (not record)
+          (set-cdr! table
+                    (cons (create-linear-chain lst val)
+                          (cdr table)))
+          (insert-into-tables record (cdr lst) val))))
   (let ((local-table (list '*table*)))
     (define (lookup key-list) 
       (let ((record (walk-down-tables local-table key-list)))
@@ -24,23 +30,7 @@
             (cdr record)
             false)))
     (define (insert! key-list value)
-      (let ((subtable 
-             (assoc key-1 (cdr local-table) same-key?)))
-        (if subtable
-            (let ((record 
-                   (assoc key-2 
-                          (cdr subtable) same-key?)))
-              (if record
-                  (set-cdr! record value)
-                  (set-cdr! 
-                   subtable
-                   (cons (cons key-2 value)
-                         (cdr subtable)))))
-            (set-cdr! 
-             local-table
-             (cons (list key-1
-                         (cons key-2 value))
-                   (cdr local-table)))))
+      (insert-into-tables local-table key-list value)
       'ok)
     (define (dispatch m)
       (cond ((eq? m 'lookup-proc) lookup)
@@ -49,16 +39,13 @@
                           TABLE" m))))
     dispatch))
 
-(define (custom-comparer? key1 key2)
-  (define tolerance 0.01)
-  (if (and (number? key1) (number? key2))
-      (< (abs (- key1 key2)) tolerance)
-      (equal? key1 key2)))
+(define tbl1 (make-table))
 
-(define tbl1 (make-table custom-comparer?))
+((tbl1 'insert-proc!) (list 'planet 1) 'Mercury)
+((tbl1 'insert-proc!) (list 'planet 2) 'Venus)
+((tbl1 'insert-proc!) (list 'planet 3) 'Earth)
 
-((tbl1 'insert-proc!) 'planet 1 'Mercury)
-((tbl1 'insert-proc!) 'planet 2 'Venus)
-((tbl1 'insert-proc!) 'planet 3 'Earth)
-
-((tbl1 'lookup-proc) 'planet 2.0001)
+(newline)
+((tbl1 'lookup-proc) (list 'planet 1)) ;Mercury
+((tbl1 'lookup-proc) (list 'planet 2)) ;Venus
+((tbl1 'lookup-proc) (list 'planet 3)) ;Earth
