@@ -47,4 +47,4 @@
       (begin (display (stream-first stream))
              (print-n (stream-rest stream) (- n 1)))))
 
-(print-n S 15000000000); very fast and almost instantenous!
+(print-n S 15000000); very fast and almost instantenous!
