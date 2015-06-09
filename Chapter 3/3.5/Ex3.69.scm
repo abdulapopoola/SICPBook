@@ -19,4 +19,17 @@
        (stream-first s1)
        (interleave s2 (stream-rest s1)))))
 
-(print-n (triples integers integers integers) 50)
+(define (pairs s t)
+  (stream-cons
+   (list (stream-first s) (stream-first t))
+   (interleave
+    (stream-map (lambda (x) 
+                  (list (stream-first t) x))
+                (stream-rest s))
+    (interleave
+     (stream-map (lambda (x) 
+                  (list (stream-first s) x))
+                (stream-rest t))
+     (pairs (stream-rest s) (stream-rest t))))))
+
+(print-n (pairs integers integers) 50)
