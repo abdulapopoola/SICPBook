@@ -20,16 +20,17 @@
        (interleave s2 (stream-rest s1)))))
 
 (define (pairs s t)
-  (stream-cons
-   (list (stream-first s) (stream-first t))
-   (interleave
-    (stream-map (lambda (x) 
-                  (list (stream-first t) x))
-                (stream-rest s))
-    (interleave
-     (stream-map (lambda (x) 
-                  (list (stream-first s) x))
-                (stream-rest t))
-     (pairs (stream-rest s) (stream-rest t))))))
+  (interleave
+   (stream-map
+    (lambda (x) 
+      (list (stream-first s) x))
+    t)
+   (pairs (stream-rest s)
+          (stream-rest t))))
 
 (print-n (pairs integers integers) 50)
+
+;; never ending loop of interleave -> pairs -> interleave calls
+;; First approach in 3.67 works because interleave operations
+;; are delayed by the cons-stream call which prevents infinite looping
+;; until needed
