@@ -32,4 +32,27 @@
                 (stream-rest t))
      (pairs (stream-rest s) (stream-rest t))))))
 
+(define (triples s t u)
+  (stream-cons
+   (list (stream-first s) (stream-first t) (stream-first u))
+   (interleave
+    (stream-map (lambda (x)
+                  (list (stream-first u) x))
+                (pairs (stream-rest s) (stream-rest t)))
+    (triples (stream-rest s) (stream-rest t) (stream-rest u)))))
+
+(define integer-triples (triples integer integer integer))
+(define (square x) (* x x))
+(define (is-pythagorean-triple? x y z)
+  (= (square z)
+     (+ (square x) (sqaure y))))
+
+(define pythagorean-triple
+  (stream-filter (lambda (triple)
+                   (is-pythagorean-triple? (car triple)
+                                           (cadr triple)
+                                           (caddr triple)))
+                 integer-triples))
+                  
+
 (print-n (pairs integers integers) 50)
