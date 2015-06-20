@@ -56,7 +56,8 @@
   (stream-filter (lambda (i) 
                    (not (or (divisible? i 2)
                             (divisible? i 3)
-                            (divisible? i 5))))))
+                            (divisible? i 5))))
+                 integers))
 
 (define second-task 
   (weighted-pairs filtered-stream filtered-stream 
