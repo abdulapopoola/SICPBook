@@ -18,8 +18,8 @@
         (else
          (let* ((s1pair (stream-first s1))
                (s2pair (stream-first s2))
-               (s1weight (weight (car s1pair) (cadr s1pair)))
-               (s2weight (weight (car s2pair) (cadr s2pair))))
+               (s1weight (weight s1pair))
+               (s2weight (weight s2pair)))
            (cond ((< s1weight s2weight)
                   (stream-cons 
                    s1pair 
@@ -34,33 +34,39 @@
                    (stream-cons s2pair
                                 (merge-weighted (stream-rest s1) (stream-rest s2) weight)))))))))
 
-(define (weighted-pairs s t w)
+(define (weighted-pairs s t weight)
   (stream-cons
    (list (stream-first s) (stream-first t))
    (merge-weighted
-    (stream-map (lambda (x) 
-                  (list (stream-first s) x))
+    (stream-map (lambda (x) (list (stream-first s) x))
                 (stream-rest t))
-    (weighted-pairs (stream-rest s) (stream-rest t) w)
-    w)))
+    (weighted-pairs (stream-rest s) (stream-rest t) weight)
+    weight)))
+
+(define (cube x) (* x x x))
+(define (sum-cube-pair pair) (+ (cube (car pair))
+                                (cube (cadr pair))))
 
 ;; 1st task
-(define first-task 
-  (weighted-pairs integers integers (lambda (x y) (+ x y))))
-(print-n first-task 10)
+(define cube-pairs-stream 
+  (weighted-pairs integers integers sum-cube-pair))
 
-;; 2nd task
-(define (divisible? dividend divisor)
-  (= 0 (remainder dividend divisor)))
+(define (ramanujan-numbers s)
+  (let* ((first-pair (stream-first s))
+         (second-pair (stream-first (stream-rest s)))
+         (w1 (sum-cube-pair first-pair))
+         (w2 (sum-cube-pair second-pair)))
+    (if (= w1 w2)
+        (stream-cons 
+         (list w1 first-pair second-pair)
+         (ramanujan-numbers (stream-rest (stream-rest s))))
+        (ramanujan-numbers (stream-rest s)))))
 
-(define filtered-stream
-  (stream-filter (lambda (i) 
-                   (not (or (divisible? i 2)
-                            (divisible? i 3)
-                            (divisible? i 5))))
-                 integers))
+(define r-numbers (ramanujan-numbers cube-pairs-stream))
+(print-n r-numbers 5)
 
-(define second-task 
-  (weighted-pairs filtered-stream filtered-stream 
-                  (lambda (x y) (+ (* 2 x) (* 3 y) (* 5 x y)))))
-(print-n second-task 10)
+;(1729 (1 12) (9 10))
+;(4104 (2 16) (9 15))
+;(13832 (2 24) (18 20))
+;(20683 (10 27) (19 24))
+;(32832 (4 32) (18 30))
