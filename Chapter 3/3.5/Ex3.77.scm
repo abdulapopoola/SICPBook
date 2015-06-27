@@ -25,4 +25,4 @@
   (define dy (stream-map f y))
   y)
 
-(print-n (solve (lambda (y) y) 1 0.001) 1000)
+(print-n (solve (lambda (y) y) 1 0.00001) 100000)
