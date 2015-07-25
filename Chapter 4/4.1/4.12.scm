@@ -1,11 +1,11 @@
 #lang racket
 
-(define (find-var-in-frame var frame)
-  (let* ((frame-vars (frame-variables frame))
-         (frame-values (frame-values frame)))
-    (cond ((null? frame-vars) false)
+(define (find-val-in-frame var frame)
+  (define (iter vars vals)
+    (cond ((null? vars) false)
           ((eq? var (car vars)) vals)
-          (else (find-var-in-frame (cdr vars) (cdr vals))))))
+          (else (iter (cdr vars) (cdr vals)))))
+  (iter (frame-variables frame) (frame-values frame)))
 
 (define (define-variable! var val env)
   (let* ((frame (first-frame env))
