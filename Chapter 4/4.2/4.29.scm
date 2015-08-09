@@ -1,7 +1,9 @@
 #lang planet neil/sicp
 
 ;; A program with a very expensive operation that needs to be thunked.
-(define (slow-for-un-memoized x) (* x x))
+(define (slow-for-un-memoized x) 
+  (cond ((eq x 1) 
+  (* x x))
 
 ;;Memoized version
 square -> 100

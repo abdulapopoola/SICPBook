@@ -362,6 +362,8 @@
         (list '* *)
         (list '- -)
         (list '= =)
+        (list 'list list)
+        (list 'newline newline)
         (list 'map map)))
 
 (define (primitive-procedure-names)
