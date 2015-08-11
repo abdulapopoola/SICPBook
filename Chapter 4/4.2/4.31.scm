@@ -32,10 +32,10 @@
 ;; force it should pick up memo or not flag
 
 (define (delay-it exp env)
-  (cond ((and (pair? exp) (eq? (car exp) 'lazy))
-         (list 'lazy (cadr exp) env))
-        ((and (pair? exp) (eq? (car exp) 'lazy-memo))
-         (list 'lazy-memo (cadr exp) env))
+  (cond ((and (pair? exp) (eq? (cadr exp) 'lazy))
+         (list 'lazy (car exp) env))
+        ((and (pair? exp) (eq? (cadr exp) 'lazy-memo))
+         (list 'lazy-memo (car exp) env))
         (else
          (actual-value exp env))))
  
