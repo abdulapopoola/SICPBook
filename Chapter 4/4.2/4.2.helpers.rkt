@@ -180,7 +180,7 @@
            result))
         ((evaluated-thunk? obj)
          (thunk-value obj))
-        (else obj))) 
+        (else obj)))
 
 ;;Save scheme's own implementation of apply to preserve it from being
 ;;overridden below
