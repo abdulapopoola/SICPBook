@@ -20,6 +20,8 @@
     (require (not (= fletcher 5)))
     (require (not (= fletcher 1)))
     (require (> miller cooper))
+    (require
+     (not (= (abs (- smith fletcher)) 1)))
     (require 
      (not (= (abs (- fletcher cooper)) 1)))
     (list (list 'baker baker)

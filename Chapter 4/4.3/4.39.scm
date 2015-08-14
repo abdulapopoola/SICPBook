@@ -14,6 +14,8 @@
     (require 
      (not (= (abs (- fletcher cooper)) 1)))
     (require
+     (not (= (abs (- smith fletcher)) 1)))
+    (require
      (distinct? (list baker cooper fletcher 
                       miller smith)))    
     (list (list 'baker baker)
