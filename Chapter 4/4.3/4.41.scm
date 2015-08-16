@@ -1,39 +1,27 @@
 #lang racket
 
-(define (valid-for-baker floorNo)
-  (memq floorNo '(1 2 3 4)))
-
-(define (valid-for-cooper floorNo)
-  (memq floorNo '(2 3 4 5)))
-
-(define (valid-for-fletcher floorNo)
-  (memq floorNo '(2 3 4)))
-
-(define (valid-for-miller floorNo cooper-floor-value)
-  (> floorNo cooper-floor-value))
-
-(define (valid-for-smith floorNo)
-  (memq floorNo '(1 2 3 4 5)))
-
 (define (insert-at lst pos x)
   (define-values (before after) (split-at lst pos))
   (append before (cons x after)))
 
-(define (permutations lst)
-  (cond ((= (length lst) 1) (list lst))
-        (else 
-         (display (cdr lst))
-         (newline)
-         (display (permutations (cdr lst)))
-         (map (lambda (lst-val)
-                (display lst-val)
-                (newline)
-                (walk-list lst-val (car lst)))
-             (permutations (cdr lst))))))
+(define (process-entries items num)
+    (if (null? items)
+        items
+        (append 
+         (walk-list (car items) num)
+         (process-entries (cdr items) num))))
+
+(define (permutations num)  
+  (define (iter val curr)
+    (if (< curr num)
+        (iter (process-entries val (+ 1 curr)) (+ 1 curr))
+        val))
+  (iter (process-entries '((1)) 2) 2))
         
 (define (walk-list lst num)
   (define (iter index out-list)
-    (cond ((> index (length lst)) out-list)
+    (cond ((not (pair? lst)) out-list)
+          ((> index (length lst)) out-list)
           (else
            (iter (+ index 1) (cons
                    (insert-at lst index num) out-list)))))
@@ -59,12 +47,12 @@
           (display (map (λ (name floor)
                           (list name floor))
                         '(baker cooper fletcher miller smith)
-                        plans))
+                        (car plans)))
           (newline))
         (find-valid-plan (cdr plans))))
-  (find-valid-plan (permutations (list 1 2 3 4 5))))
+  (find-valid-plan (permutations 5)))
                 
-(define x (walk-list (list 1 2 3) 4))
+;(define x (walk-list (list 1 2 3) 4))
 ;(car x)
 ;(cadr x)
 ;(caddr x)
@@ -72,4 +60,8 @@
 ;       (walk-list lst 4))
 ;       (list (list 1 2 3) (list 2 1 3)))
 
-(permutations (list 1 2 3))
+;(length (permutations 5))
+;(length (process-entries (process-entries (process-entries '((2 3) (3 2)) 1) 4) 5))
+
+(multiple-dwellings)
+; ((baker 3) (cooper 2) (fletcher 4) (miller 5) (smith 1))
