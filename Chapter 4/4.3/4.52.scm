@@ -8,5 +8,5 @@
              (lambda (pred-value fail2)
                (if (true? pred-value)
                    pred-value
-                   (fail2)))
+                   (fail)))
              (lambda () (cproc env succeed fail))))))
