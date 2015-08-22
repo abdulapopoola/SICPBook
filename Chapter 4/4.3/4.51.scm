@@ -1,3 +1,5 @@
+#lang planet neil/sicp
+
 (define (permanent-set exp)
   (let ((var (assignment-variable exp))
         (vproc (analyze 
@@ -8,3 +10,6 @@
                 (set-variable-value! var val env)
                 (succeed 'ok fail2)) 
             fail))))
+
+
+; count would be 1 since it always backtracks after a failure
