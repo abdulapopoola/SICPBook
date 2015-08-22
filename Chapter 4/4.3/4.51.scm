@@ -1,4 +1,4 @@
-(define (analyze-assignment exp)
+(define (permanent-set exp)
   (let ((var (assignment-variable exp))
         (vproc (analyze 
                 (assignment-value exp))))
