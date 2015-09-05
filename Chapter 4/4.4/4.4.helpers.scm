@@ -67,6 +67,8 @@
                 (first-conjunct conjuncts)
                 frame-stream))))
 
+(put 'and 'qeval conjoin)
+
 (define (disjoin disjuncts frame-stream)
   (if (empty-disjunction? disjuncts)
       the-empty-stream
@@ -78,4 +80,74 @@
                frame-stream)))))
 (put 'or 'qeval disjoin)
 
+(define (negate operands frame-stream)
+  (stream-flatmap
+   (lambda (frame)
+     (if (stream-null? 
+          (qeval (negated-query operands)
+                 (singleton-stream frame)))
+         (singleton-stream frame)
+         the-empty-stream))
+   frame-stream))
+(put 'not 'qeval negate)
 
+(define (lisp-value call frame-stream)
+  (stream-flatmap
+   (lambda (frame)
+     (if (execute
+          (instantiate
+           call
+           frame
+           (lambda (v f)
+             (error 
+              "Unknown pat var: LISP-VALUE" 
+              v))))
+         (singleton-stream frame)
+         the-empty-stream))
+   frame-stream))
+(put 'lisp-value 'qeval lisp-value)
+
+(define (execute exp)
+  (apply (eval (predicate exp) 
+               user-initial-environment)
+         (args exp)))
+
+(define (always-true ignore frame-stream) 
+  frame-stream)
+(put 'always-true 'qeval always-true)
+
+(define (find-assertions pattern frame)
+  (stream-flatmap 
+    (lambda (datum) 
+      (check-an-assertion datum pattern frame))
+    (fetch-assertions pattern frame)))
+
+(define (check-an-assertion 
+         assertion query-pat query-frame)
+  (let ((match-result
+         (pattern-match 
+          query-pat assertion query-frame)))
+    (if (eq? match-result 'failed)
+        the-empty-stream
+        (singleton-stream match-result))))
+
+(define (pattern-match pat dat frame)
+  (cond ((eq? frame 'failed) 'failed)
+        ((equal? pat dat) frame)
+        ((var? pat) 
+         (extend-if-consistent 
+          pat dat frame))
+        ((and (pair? pat) (pair? dat))
+         (pattern-match 
+          (cdr pat) 
+          (cdr dat)
+          (pattern-match
+           (car pat) (car dat) frame)))
+        (else 'failed)))
+
+(define (extend-if-consistent var dat frame)
+  (let ((binding (binding-in-frame var frame)))
+    (if binding
+        (pattern-match 
+         (binding-value binding) dat frame)
+        (extend var dat frame))))
