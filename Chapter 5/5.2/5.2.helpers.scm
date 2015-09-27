@@ -178,13 +178,7 @@
        (set-instruction-execution-proc!
         inst
         (make-execution-procedure
-         (instruction-text inst) 
-         labels
-         machine
-         pc
-         flag
-         stack
-         ops)))
+         (instruction-text inst) labels machine pc flag stack ops)))
      insts)))
 
 (define (make-instruction text)
