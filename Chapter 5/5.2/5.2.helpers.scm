@@ -212,9 +212,7 @@
 (define (instruction-text inst) (car inst))
 (define (instruction-execution-proc inst)
   (cdr inst))
-(define (set-instruction-execution-proc!
-         inst
-         proc)
+(define (set-instruction-execution-proc! inst proc)
   (set-cdr! inst proc))
 
 (define (make-label-entry label-name insts)
