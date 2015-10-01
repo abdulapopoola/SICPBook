@@ -99,22 +99,17 @@
                  (list 'flag flag))))
       (define (allocate-register name)
         (if (assoc name register-table)
-            (error 
-             "Multiply defined register: " 
-             name)
+            (error "Multiply defined register: " name)
             (set! register-table
                   (cons 
-                   (list name 
-                         (make-register name))
+                   (list name (make-register name))
                    register-table)))
         'register-allocated)
       (define (lookup-register name)
-        (let ((val 
-               (assoc name register-table)))
+        (let ((val (assoc name register-table)))
           (if val
               (cadr val)
-              (error "Unknown register:" 
-                     name))))
+              (error "Unknown register:" name))))
       (define (execute)
         (let ((insts (get-contents pc)))
           (if (null? insts)
