@@ -217,8 +217,7 @@
   (let ((val (assoc label-name labels)))
     (if val
         (cdr val)
-        (error "Undefined label: ASSEMBLE" 
-               label-name))))
+        (error "Undefined label: ASSEMBLE" label-name))))
 
 (define (make-execution-procedure 
          inst labels machine pc flag stack ops)
@@ -240,9 +239,8 @@
         ((eq? (car inst) 'perform)
          (make-perform
           inst machine labels ops pc))
-        (else (error "Unknown instruction 
-                      type: ASSEMBLE"
-                     inst))))
+        (else 
+         (error "Unknown instruction type: ASSEMBLE" inst))))
 
 (define (make-assign 
          inst machine labels operations pc)
@@ -300,17 +298,12 @@
    inst machine labels flag pc)
   (let ((dest (branch-dest inst)))
     (if (label-exp? dest)
-        (let ((insts
-               (lookup-label 
-                labels 
-                (label-exp-label dest))))
+        (let ((insts (lookup-label labels (label-exp-label dest))))
           (lambda ()
             (if (get-contents flag)
                 (set-contents! pc insts)
                 (advance-pc pc))))
-        (error "Bad BRANCH instruction: 
-                ASSEMBLE"
-               inst))))
+        (error "Bad BRANCH instruction: ASSEMBLE" inst))))
 
 (define (branch-dest branch-instruction)
   (cadr branch-instruction))
@@ -333,9 +326,7 @@
                (set-contents! 
                 pc
                 (get-contents reg)))))
-          (else (error "Bad GOTO instruction: 
-                        ASSEMBLE"
-                       inst)))))
+          (else (error "Bad GOTO instruction: ASSEMBLE" inst)))))
 
 (define (goto-dest goto-instruction)
   (cadr goto-instruction))
@@ -373,9 +364,8 @@
           (lambda ()
             (action-proc)
             (advance-pc pc)))
-        (error "Bad PERFORM instruction: 
-                ASSEMBLE"
-               inst))))
+        (error 
+         "Bad PERFORM instruction: ASSEMBLE" inst))))
 
 (define (perform-action inst) (cdr inst))
 
@@ -385,18 +375,12 @@
            (lambda () c)))
         ((label-exp? exp)
          (let ((insts
-                (lookup-label 
-                 labels
-                 (label-exp-label exp))))
+                (lookup-label labels (label-exp-label exp))))
            (lambda () insts)))
         ((register-exp? exp)
-         (let ((r (get-register
-                   machine
-                   (register-exp-reg exp))))
+         (let ((r (get-register machine (register-exp-reg exp))))
            (lambda () (get-contents r))))
-        (else (error "Unknown expression type: 
-                      ASSEMBLE"
-                     exp))))
+        (else (error "Unknown expression type:  ASSEMBLE" exp))))
 
 (define (register-exp? exp)
   (tagged-list? exp 'reg))
@@ -436,5 +420,4 @@
   (let ((val (assoc symbol operations)))
     (if val
         (cadr val)
-        (error "Unknown operation: ASSEMBLE"
-               symbol))))
+        (error "Unknown operation: ASSEMBLE" symbol))))
