@@ -51,3 +51,44 @@
     (assign val (const 1))
     (goto (reg continue)) 
    completed)))
+
+
+
+;; B USING explicit counter
+(define count-leaves-machine-2 
+   (make-machine
+    '(continue tree tmp val) ;registers
+    (list (list 'null? null?)     ; ops
+          (list 'pair? pair?) 
+          (list 'not not)
+          (list '+ +)
+          (list 'car car)
+          (list 'cdr cdr))
+   '(                             ; controller-text
+    (assign continue (label completed)) 
+    (assign val (const 0)) 
+   tree-loop 
+    (test (op null?) (reg tree)) 
+    (branch (label tree-null)) 
+    (assign tmp (op pair?) (reg tree))
+    (test (op not) (reg tmp))
+    (branch (label tree-leaf))    
+    (goto (label walk-tree-car))
+   walk-tree-car
+    (save tree)
+    (save continue)
+    (assign tree (op car) (reg tree))
+    (assign continue (label tree-car-walk-done))
+    (goto (label tree-loop))
+   tree-car-walk-done
+    (restore tree)
+    (restore continue)
+    (assign tree (op cdr) (reg tree))
+    (goto (label tree-loop))
+   tree-null
+    (assign val (const 0))
+    (goto (reg continue)) 
+   tree-leaf
+    (assign val (op +) (reg val) (const 1))
+    (goto (reg continue)) 
+   completed)))
