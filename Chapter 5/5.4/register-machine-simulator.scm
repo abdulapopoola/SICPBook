@@ -24,9 +24,7 @@
              (lambda (value) 
                (set! contents value)))
             (else
-             (error "Unknown request: 
-                     REGISTER"
-                    message))))
+             (error "Unknown request: REGISTER" message))))
     dispatch))
 
 (define (get-contents register)
@@ -119,33 +117,21 @@
                 (execute)))))
       (define (dispatch message)
         (cond ((eq? message 'start)
-               (set-contents! 
-                pc
-                the-instruction-sequence)
+               (set-contents! pc the-instruction-sequence)
                (execute))
-              ((eq? 
-                message 
-                'install-instruction-sequence)
+              ((eq? message 'install-instruction-sequence)
                (lambda (seq) 
-                 (set! 
-                  the-instruction-sequence 
-                  seq)))
-              ((eq? message 
-                    'allocate-register) 
+                 (set! the-instruction-sequence seq)))
+              ((eq? message 'allocate-register) 
                allocate-register)
               ((eq? message 'get-register) 
                lookup-register)
-              ((eq? message 
-                    'install-operations)
-               (lambda (ops) 
-                 (set! the-ops 
-                       (append the-ops ops))))
+              ((eq? message 'install-operations)
+               (lambda (ops) (set! the-ops (append the-ops ops))))
               ((eq? message 'stack) stack)
               ((eq? message 'operations) 
                the-ops)
-              (else (error "Unknown request: 
-                            MACHINE"
-                           message))))
+              (else (error "Unknown request: MACHINE" message))))
       dispatch)))
 
 (define (start machine)
