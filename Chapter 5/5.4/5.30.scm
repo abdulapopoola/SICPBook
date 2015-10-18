@@ -23,7 +23,7 @@
 
 (define (safe-car val)
   (cond ((null? val) (error-info "car into empty list" val))
-        ((not (pair? lst)) (error-info "car into non-pair value" val))
+        ((not (pair? val)) (error-info "car into non-pair value" val))
         (else (car val))))
 
 (define (safe-divide dividend divisor)
@@ -44,7 +44,8 @@
         (list 'error-info? error-info?)
         (list 'error-msg error-msg)))
 
-;; RELEVANT changed sections ONLY
+;; RELEVANT changed sections ONLY; change these where they are used and 
+;; everything should work fine
 ev-variable
   (assign val (op lookup-variable-value) (reg exp) (reg env))
   (test (op error-info?) (reg val))
