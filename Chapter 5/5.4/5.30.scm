@@ -62,3 +62,5 @@ primitive-apply
 signal-error
   (assign val (op error-msg) (reg val))
   (goto (label done))
+  
+done ;; <- LAST label in eceval machine
