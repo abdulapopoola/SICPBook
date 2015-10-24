@@ -21,3 +21,7 @@
          (compile-application  exp target linkage))
         (else
          (error "Unknown expression type: COMPILE" exp))))
+
+(define (make-instruction-sequence 
+         needs modifies statements)
+  (list needs modifies statements))
