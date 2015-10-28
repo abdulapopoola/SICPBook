@@ -1,3 +1,6 @@
+(load "../5.4/scheme-operators.scm")
+(load "helpers.scm")
+
 (define (compile exp target linkage)
   (cond ((self-evaluating? exp)
          (compile-self-evaluating exp target linkage))
@@ -22,8 +25,9 @@
         (else
          (error "Unknown expression type: COMPILE" exp))))
 
-(define (make-instruction-sequence 
-         needs modifies statements)
+(define all-regs '(env proc val argl continue))
+
+(define (make-instruction-sequence needs modifies statements)
   (list needs modifies statements))
 
 (define (empty-instruction-sequence)
@@ -36,12 +40,12 @@
         ((eq? linkage 'next)
          (empty-instruction-sequence))
         (else
-         (make-instruction-sequence '() '()
-          `((goto (label ,linkage)))))))
+         (make-instruction-sequence 
+          '() '() `((goto (label ,linkage)))))))
 
-(define (end-with-linkage 
-         linkage instruction-sequence)
-  (preserving '(continue)
+(define (end-with-linkage linkage instruction-sequence)
+  (preserving 
+   '(continue)
    instruction-sequence
    (compile-linkage linkage)))
 
@@ -386,3 +390,14 @@
    (list-union (registers-modified seq1)
                (registers-modified seq2))
    (append (statements seq1) (statements seq2))))
+
+(define label-counter 0)
+
+(define (new-label-number)
+  (set! label-counter (+ 1 label-counter))
+  label-counter)
+
+(define (make-label name)
+  (string->symbol
+    (string-append (symbol->string name)
+                   (number->string (new-label-number)))))
