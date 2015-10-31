@@ -40,20 +40,37 @@
     (list code1 code2)))
 
 (define (compile-open-coded exp target linkage)
-  (if (= (length exp) 3)
-    (let ((op (car exp))
-          (args (spread-arguments (cadr exp) (caddr exp))))
-      (end-with-linkage linkage
-        (append-instruction-sequences
-          (car args)
-          (preserving '(arg1)
-            (cadr args)
-            (make-instruction-sequence '(arg1 arg2) (list target)
-              `((assign ,target (op ,op) (reg arg1) (reg arg2))))))))
-    (error "Expected a 3-element list -- COMPILE-OPEN-BINARY-OP" exp)))
+  (if (or (var-arg-open-coded? exp)
+          (= (length exp) 3))
+      (let ((op (car exp))
+            (first-operand (cadr exp))
+            (rest-operands (cddr exp)))
+        (preserving '(env continue)
+                    (compile first-operand 'arg1 'next)
+                    (compile-open-coded-rest-args op rest-operands target linkage)))
+      (error "Expected a binary operation!" exp)))
+
+(define (compile-open-coded-rest-args exp operands target linkage)
+  (if (null? (cdr operands))
+      (preserving '(arg1 continue)
+                  (compile (car operands) 'arg2 'next)
+                  (end-with-linkage
+                   linkage
+                   (make-instruction-sequence 
+                    '(arg1 arg2) 
+                    (list target)
+                    `((assign ,target (op exp) (reg arg1) (reg arg2))))))
+      (preserving '(env continue)
+                  (preserving '(arg1)
+                              (compile (car operands) 'arg2 'next)
+                              (make-instruction-sequence
+                               '(arg1 arg2)
+                               '(arg1)
+                               `((assign arg1 (op exp) (reg arg1) (reg arg2)))))
+                  (compile-open-coded-rest-args exp (cdr operands) target linkage))))
 
 (define code (compile
-              '(+ 1 2)
+              '(+ 1 2 3 4)
                'val
                'next))
 
